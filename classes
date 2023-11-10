@@ -1,0 +1,478 @@
+ 
+
+Zomato-Restaurant-Analysis
+Title: Miniproject on Zomato Bangalore Restaurant Analysis. Problem Definition: Performing Explaratory Data Analysis and Regression Analysis to determining the rating of restaurants depending upon locality, food ,reviews. 1)Prerequisite: Install Anaconda Python, Jupyter Notebook, Ubuntu 18.04. 2)Software Requirement: Jupyter Notebook, Spyder on Ubuntu. 3)Hardware Requirement: 2GB RAM, 500 GB HDD 4)Objectives: To understand the parameters determining the rating of restaurants in bangalore by applying linear regression,decision tree regression and random forest regression. 5)Outcomes: After completion of this assignment we can analyze the best locality,menu list for building new restaurant in Bangalore.
+
+Theory Concepts:
+
+Explaratory Data Analysis EDA stands for Exploratory Data Analysis. EDA is a critical first step in analyzing the data from an experiment. Here are the main reasons we use EDA: • detection of mistakes • checking of assumptions • preliminary selection of appropriate models • determining relationships among the explanatory variables, and • assessing the direction and rough size of relationships between explanatory and outcome variables. ⦁ Typical data format ⦁ The data from an experiment are generally collected into a rectangular array (e.g., spreadsheet or database), most commonly with one row per experimental subject and one column for each subject identifier, outcome variable, and explanatory variable.
+⦁ Each column contains the numeric values for a particular quantitative variable or the levels for a categorical variable. (Some more complicated experiments require a more complex data layout.) ⦁ Exploratory data analysis techniques have been devised as an aid in this situation. Most of these techniques work in part by hiding certain aspects of the data while making other aspects clearer.
+
+⦁ Types of EDA ⦁ Univariate non-graphical ⦁ Multivariate non-graphical ⦁ Univariate graphical ⦁ Multivariate graphical.
+
+Data Cleaning Step 1 : Import the Data-set By using Pandas we import our data-set and the file I used here is .csv file It’s not necessarily every-time you deal with CSV file, sometimes you deal with Html or Xlsx(Excel file). However, to access and to use fastly we use CSV files because of their light weights. After importing the dataset, you can see we use head function This function returns the first n rows for the object based on position. It is useful for quickly testing if your object has the right type of data in it. By default it returns 5 rows.
+Step 2 : Check out the Missing Values The concept of missing values is important to understand in order to successfully manage data. If the missing values are not handled properly by the researcher, then he/she may end up drawing an inaccurate inference about the data. Due to improper handling, the result obtained by the researcher will differ from ones where the missing values are present. Two ways to handle Missing Values:
+
+This method commonly used to handle the null values. Here, we either delete a particular row if it has a null value for a particular feature and a particular column if it has more than 75% of missing values. This method is advised only when there are enough samples in the data set. One has to make sure that after we have deleted the data, there is no addition of bias. Removing the data will lead to loss of information which will not give the expected results while predicting the output.
+
+Drop the Missing Values This strategy can be applied on a feature which has numeric data like the year column or Home team goal column. We can calculate the mean, median or mode of the feature and replace it with the missing values. This is an approximation which can add variance to the data set. But the loss of the data can be negated by this method which yields better results compared to removal of rows and columns. Replacing with the above three approximations are a statistical approach of handling the missing values. This method is also called as leaking the data while training. Another way is to approximate it with the deviation of neighbouring values. This works better if the data is linear.
+
+Step 3: See the Categorical Values Analyze the categorical values of column and assign the numeric values for each category which can be useful in furthur processing of data and mapping of data. Suppose we have gender as a column having values male and female then we can assign 1 for male and 0 female using LabelEncoder class.
+
+Step 4 : Splitting the data-set into Training and Test Set In any Machine Learning model is that we’re going to split data-set into two separate sets
+
+Training Set
+
+Test Set Using train_test_split class we can split the given dataset into train and test data. Train data is the input data for the processing and test data is the data used for comparison with train data hence machine can predict on basis of this data.
+
+Analysis
+
+⦁ Linear Regression linear regression is a linear approach to modeling the relationship between a scalar response (or dependent variable) and one or more explanatory variables (or independent variables).
+
+⦁ Decision Tree Regression Decision Tree - Regression. Decision tree builds regression or classification models in the form of a tree structure. It breaks down a dataset into smaller and smaller subsets while at the same time an associated decision tree is incrementally developed.
+
+⦁ Random Forest Generator Random forests or random decision forests are an ensemble learning method for classification, regression and other tasks that operates by constructing a multitude of decision trees at training time and outputting the class that is the mode of the classes (classification) or mean prediction (regression).
+
+About the Data Set
+The basic idea of analyzing the Zomato dataset is to get a fair idea about the factors affecting the aggregate rating of each restaurant, establishment of different types of restaurant at different places, Bengaluru being one such city has more than 12,000 restaurants with restaurants serving dishes from all over the world. url contains the url of the restaurant in the zomato website address contains the address of the restaurant in Bengaluru name contains the name of the restaurant online_order whether online ordering is available in the restaurant or not book_table table book option available or not rate contains the overall rating of the restaurant out of 5 votes contains total number of rating for the restaurant as of the above mentioned date phone contains the phone number of the restaurant location contains the neighborhood in which the restaurant is located rest_type restaurant type dish_liked dishes people liked in the restaurant cuisines food styles, separated by comma approx_cost(for two people)contains the approximate cost for meal for two people reviews_list list of tuples containing reviews for the restaurant, each tuple consists of two values, rating and review by the customer menu_item contains list of menus available in the restaurant listed_in(type) type of meal listed_in(city) contains the neighborhood in which the restaurant is listed
+
+We can ask the following questions
+
+What kind of a food is more popular in a locality.
+Do the entire locality loves vegetarian food. If yes then is that locality populated by a particular sect of people for eg. Jain, Marwaris, Gujaratis who are mostly vegetarian. These kind of analysis can be done using the data, by studying the factors such as • Location of the restaurant • Approx Price of food Theme based restaurant or not
+Which locality of that city serves that cuisines with maximum number of restaurants • The needs of people who are striving to get the best cuisine of the neighborhood • Is a particular neighborhood famous for its own kind of food.
+Conclusion:
+Thus, after successfully completing this assignment, we were able to understand that the restuarants which are located in the central Bangalore have more visits and the ratings of the restaurants is between 3 and 4.
+
+
+
+
+
+
+
+******************************CODE**********
+In [46]:
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt
+import seaborn as sns 
+from sklearn.linear_model import LogisticRegression 
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split 
+from sklearn.metrics import classification_report 
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import r2_score
+In [47]:
+zomato_orgnl= pd.read_csv("F:\zomato.csv")
+zomato_orgnl.head()
+Out[47]:
+url	address	name	online_order	book_table	rate	votes	phone	location	rest_type	dish_liked	cuisines	approx_cost(for two people)	reviews_list	menu_item	listed_in(type)	listed_in(city)
+0	https://www.zomato.com/bangalore/jalsa-banasha...	942, 21st Main Road, 2nd Stage, Banashankari, ...	Jalsa	Yes	Yes	4.1/5	775	080 42297555\r\n+91 9743772233	Banashankari	Casual Dining	Pasta, Lunch Buffet, Masala Papad, Paneer Laja...	North Indian, Mughlai, Chinese	800	[('Rated 4.0', 'RATED\n A beautiful place to ...	[]	Buffet	Banashankari
+1	https://www.zomato.com/bangalore/spice-elephan...	2nd Floor, 80 Feet Road, Near Big Bazaar, 6th ...	Spice Elephant	Yes	No	4.1/5	787	080 41714161	Banashankari	Casual Dining	Momos, Lunch Buffet, Chocolate Nirvana, Thai G...	Chinese, North Indian, Thai	800	[('Rated 4.0', 'RATED\n Had been here for din...	[]	Buffet	Banashankari
+2	https://www.zomato.com/SanchurroBangalore?cont...	1112, Next to KIMS Medical College, 17th Cross...	San Churro Cafe	Yes	No	3.8/5	918	+91 9663487993	Banashankari	Cafe, Casual Dining	Churros, Cannelloni, Minestrone Soup, Hot Choc...	Cafe, Mexican, Italian	800	[('Rated 3.0', "RATED\n Ambience is not that ...	[]	Buffet	Banashankari
+3	https://www.zomato.com/bangalore/addhuri-udupi...	1st Floor, Annakuteera, 3rd Stage, Banashankar...	Addhuri Udupi Bhojana	No	No	3.7/5	88	+91 9620009302	Banashankari	Quick Bites	Masala Dosa	South Indian, North Indian	300	[('Rated 4.0', "RATED\n Great food and proper...	[]	Buffet	Banashankari
+4	https://www.zomato.com/bangalore/grand-village...	10, 3rd Floor, Lakshmi Associates, Gandhi Baza...	Grand Village	No	No	3.8/5	166	+91 8026612447\r\n+91 9901210005	Basavanagudi	Casual Dining	Panipuri, Gol Gappe	North Indian, Rajasthani	600	[('Rated 4.0', 'RATED\n Very good restaurant ...	[]	Buffet	Banashankari
+In [48]:
+zomato=zomato_orgnl.drop(['url','dish_liked','phone'],axis=1)
+In [49]:
+zomato.duplicated().sum()
+zomato.drop_duplicates(inplace=True)
+In [50]:
+zomato.isnull().sum()
+zomato.dropna(how='any',inplace=True)
+zomato.info()
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 43499 entries, 0 to 51716
+Data columns (total 14 columns):
+address                        43499 non-null object
+name                           43499 non-null object
+online_order                   43499 non-null object
+book_table                     43499 non-null object
+rate                           43499 non-null object
+votes                          43499 non-null int64
+location                       43499 non-null object
+rest_type                      43499 non-null object
+cuisines                       43499 non-null object
+approx_cost(for two people)    43499 non-null object
+reviews_list                   43499 non-null object
+menu_item                      43499 non-null object
+listed_in(type)                43499 non-null object
+listed_in(city)                43499 non-null object
+dtypes: int64(1), object(13)
+memory usage: 5.0+ MB
+In [51]:
+zomato.columns
+zomato = zomato.rename(columns={'approx_cost(for two people)':'cost','listed_in(type)':'type',
+                                  'listed_in(city)':'city'})
+zomato.columns
+Out[51]:
+Index(['address', 'name', 'online_order', 'book_table', 'rate', 'votes',
+       'location', 'rest_type', 'cuisines', 'cost', 'reviews_list',
+       'menu_item', 'type', 'city'],
+      dtype='object')
+In [52]:
+zomato['cost'] = zomato['cost'].astype(str)
+zomato['cost'] = zomato['cost'].apply(lambda x: x.replace(',','.'))
+zomato['cost'] = zomato['cost'].astype(float)
+zomato.info()
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 43499 entries, 0 to 51716
+Data columns (total 14 columns):
+address         43499 non-null object
+name            43499 non-null object
+online_order    43499 non-null object
+book_table      43499 non-null object
+rate            43499 non-null object
+votes           43499 non-null int64
+location        43499 non-null object
+rest_type       43499 non-null object
+cuisines        43499 non-null object
+cost            43499 non-null float64
+reviews_list    43499 non-null object
+menu_item       43499 non-null object
+type            43499 non-null object
+city            43499 non-null object
+dtypes: float64(1), int64(1), object(12)
+memory usage: 5.0+ MB
+In [53]:
+zomato['rate'].unique()
+zomato = zomato.loc[zomato.rate !='NEW']
+zomato = zomato.loc[zomato.rate !='-'].reset_index(drop=True)
+remove_slash = lambda x: x.replace('/5', '') if type(x) == np.str else x
+zomato.rate = zomato.rate.apply(remove_slash).str.strip().astype('float')
+zomato['rate'].head()
+Out[53]:
+0    4.1
+1    4.1
+2    3.8
+3    3.7
+4    3.8
+Name: rate, dtype: float64
+In [54]:
+def Encode(zomato):
+    for column in zomato.columns[~zomato.columns.isin(['rate', 'cost', 'votes'])]:
+        zomato[column] = zomato[column].factorize()[0]
+    return zomato
+
+zomato_en = Encode(zomato.copy())
+In [55]:
+corr = zomato_en.corr(method='kendall')
+plt.figure(figsize=(15,8))
+sns.heatmap(corr, annot=True)
+zomato_en.columns
+Out[55]:
+Index(['address', 'name', 'online_order', 'book_table', 'rate', 'votes',
+       'location', 'rest_type', 'cuisines', 'cost', 'reviews_list',
+       'menu_item', 'type', 'city'],
+      dtype='object')
+
+In [56]:
+sns.countplot(zomato['online_order'])
+fig = plt.gcf()
+fig.set_size_inches(10,10)
+plt.title('Restaurants delivering online or Not')
+Out[56]:
+Text(0.5, 1.0, 'Restaurants delivering online or Not')
+
+In [57]:
+sns.countplot(zomato['book_table'])
+fig = plt.gcf()
+fig.set_size_inches(10,10)
+plt.title('Restaurants allowing table booking or not')
+Out[57]:
+Text(0.5, 1.0, 'Restaurants allowing table booking or not')
+
+In [58]:
+plt.rcParams['figure.figsize'] = (13, 9)
+Y = pd.crosstab(zomato['rate'], zomato['book_table'])
+Y.div(Y.sum(1).astype(float), axis = 0).plot(kind = 'bar', stacked = True,color=['red','yellow'])
+plt.title('table booking vs rate', fontweight = 30, fontsize = 20)
+plt.legend(loc="upper right")
+plt.show()
+
+In [59]:
+sns.countplot(zomato['city'])
+sns.countplot(zomato['city']).set_xticklabels(sns.countplot(zomato['city']).get_xticklabels(), rotation=90, ha="right")
+fig = plt.gcf()
+fig.set_size_inches(13,13)
+plt.title('Location')
+Out[59]:
+Text(0.5, 1.0, 'Location')
+
+In [60]:
+loc_plt=pd.crosstab(zomato['rate'],zomato['city'])
+loc_plt.plot(kind='bar',stacked=True);
+plt.title('Location - Rating',fontsize=15,fontweight='bold')
+plt.ylabel('Location',fontsize=10,fontweight='bold')
+plt.xlabel('Rating',fontsize=10,fontweight='bold')
+plt.xticks(fontsize=10,fontweight='bold')
+plt.yticks(fontsize=10,fontweight='bold');
+plt.legend().remove();
+
+In [61]:
+sns.countplot(zomato['rest_type'])
+sns.countplot(zomato['rest_type']).set_xticklabels(sns.countplot(zomato['rest_type']).get_xticklabels(), rotation=90, ha="right")
+fig = plt.gcf()
+fig.set_size_inches(15,15)
+plt.title('Restuarant Type')
+Out[61]:
+Text(0.5, 1.0, 'Restuarant Type')
+
+In [62]:
+loc_plt=pd.crosstab(zomato['rate'],zomato['rest_type'])
+loc_plt.plot(kind='bar',stacked=True);
+plt.title('Rest type - Rating',fontsize=15,fontweight='bold')
+plt.ylabel('Rest type',fontsize=10,fontweight='bold')
+plt.xlabel('Rating',fontsize=10,fontweight='bold')
+plt.xticks(fontsize=10,fontweight='bold')
+plt.yticks(fontsize=10,fontweight='bold');
+plt.legend().remove();
+
+In [63]:
+sns.countplot(zomato['type'])
+sns.countplot(zomato['type']).set_xticklabels(sns.countplot(zomato['type']).get_xticklabels(), rotation=90, ha="right")
+fig = plt.gcf()
+fig.set_size_inches(15,15)
+plt.title('Type of Service')
+Out[63]:
+Text(0.5, 1.0, 'Type of Service')
+
+In [64]:
+type_plt=pd.crosstab(zomato['rate'],zomato['type'])
+type_plt.plot(kind='bar',stacked=True);
+plt.title('Type - Rating',fontsize=15,fontweight='bold')
+plt.ylabel('Type',fontsize=10,fontweight='bold')
+plt.xlabel('Rating',fontsize=10,fontweight='bold')
+plt.xticks(fontsize=10,fontweight='bold')
+plt.yticks(fontsize=10,fontweight='bold');
+
+In [65]:
+sns.countplot(zomato['cost'])
+sns.countplot(zomato['cost']).set_xticklabels(sns.countplot(zomato['cost']).get_xticklabels(), rotation=90, ha="right")
+fig = plt.gcf()
+fig.set_size_inches(15,15)
+plt.title('Cost of Restuarant')
+Out[65]:
+Text(0.5, 1.0, 'Cost of Restuarant')
+
+In [66]:
+fig = plt.figure(figsize=(20,7))
+loc = sns.countplot(x="location",data=zomato_orgnl, palette = "Set1")
+loc.set_xticklabels(loc.get_xticklabels(), rotation=90, ha="right")
+plt.ylabel("Frequency",size=15)
+plt.xlabel("Location",size=18)
+loc
+plt.title('NO. of restaurants in a Location',size = 20,pad=20)
+Out[66]:
+Text(0.5, 1.0, 'NO. of restaurants in a Location')
+
+In [67]:
+#Restaurant type
+fig = plt.figure(figsize=(17,5))
+rest = sns.countplot(x="rest_type",data=zomato_orgnl, palette = "Set1")
+rest.set_xticklabels(rest.get_xticklabels(), rotation=90, ha="right")
+plt.ylabel("Frequency",size=15)
+plt.xlabel("Restaurant type",size=15)
+rest 
+plt.title('Restaurant types',fontsize = 20 ,pad=20)
+Out[67]:
+Text(0.5, 1.0, 'Restaurant types')
+
+In [68]:
+plt.figure(figsize=(15,7))
+chains=zomato_orgnl['name'].value_counts()[:20]
+sns.barplot(x=chains,y=chains.index,palette='Set1')
+plt.title("Most famous restaurant chains in Bangaluru",size=20,pad=20)
+plt.xlabel("Number of outlets",size=15)
+Out[68]:
+Text(0.5, 0, 'Number of outlets')
+
+In [69]:
+plt.figure(figsize=(12,6)) 
+zomato_orgnl['location'].value_counts()[:10].plot(kind = 'pie')
+plt.title('Location', weight = 'bold')
+Out[69]:
+Text(0.5, 1.0, 'Location')
+
+In [70]:
+plt.figure(figsize = (12,6))
+names = zomato_orgnl['location'].value_counts()[:10].index
+values = zomato_orgnl['location'].value_counts()[:10].values
+colors = ['gold', 'red', 'lightcoral', 'lightskyblue','blue','green','silver']
+explode = (0.1, 0, 0, 0,0,0,0,0,0,0)  # explode 1st slice
+
+plt.pie(values, explode=explode, labels=names, colors=colors,autopct='%1.1f%%', shadow=True, startangle=140)
+plt.axis('equal')
+plt.title("Percentage of restaurants present in that location", weight = 'bold')
+plt.show()
+
+In [71]:
+x = zomato_en.iloc[:,[2,3,5,6,7,8,9,11]]
+y = zomato_en['rate']
+#Getting Test and Training Set
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=.1,random_state=353)
+x_train.head()
+y_train.head()
+Out[71]:
+16950    3.9
+767      3.7
+6750     4.0
+9471     3.8
+25162    3.7
+Name: rate, dtype: float64
+In [72]:
+from sklearn.tree import DecisionTreeRegressor
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=.1,random_state=105)
+Dtree=DecisionTreeRegressor(min_samples_leaf=.0001)
+Dtree.fit(x_train,y_train)
+y_predict=Dtree.predict(x_test)
+from sklearn.metrics import r2_score
+r2_score(y_test,y_predict)
+Out[72]:
+0.8512050639381387
+In [73]:
+Decisionpred =pd.DataFrame({ "actual": y_test, "pred": y_predict })
+Decisionpred
+Out[73]:
+actual	pred
+6821	4.0	3.950000
+21541	3.7	3.700000
+34583	4.0	4.000000
+5162	3.4	3.400000
+32463	4.5	4.475000
+16675	4.3	4.300000
+4981	4.0	4.000000
+36271	4.0	4.000000
+40906	3.5	3.425000
+30733	4.3	4.060000
+6763	4.1	4.180000
+4495	3.1	3.171429
+12633	3.5	3.428571
+11983	4.3	4.300000
+36938	3.2	3.175000
+9796	4.1	4.100000
+11244	3.0	3.228571
+16623	4.1	4.100000
+8737	3.7	3.760000
+3933	4.2	4.120000
+17855	4.2	4.200000
+14	3.8	3.800000
+17591	3.6	3.528571
+14062	4.3	4.300000
+29209	4.3	4.283333
+23188	3.8	3.800000
+40485	3.5	3.400000
+29306	3.2	3.220000
+40716	4.4	3.900000
+22626	3.5	3.500000
+...	...	...
+15350	4.1	4.028571
+9605	3.3	3.320000
+6249	3.3	3.375000
+17575	3.7	3.500000
+9125	4.7	4.700000
+38287	3.5	3.500000
+34564	4.0	4.000000
+10930	3.7	3.540000
+9783	3.2	3.200000
+6554	2.7	2.757143
+33734	4.0	3.962500
+27224	3.6	3.257143
+28712	4.0	4.000000
+35817	3.0	3.225000
+5516	3.4	2.900000
+26291	3.6	3.600000
+29533	3.9	3.775000
+33070	4.5	4.000000
+13101	3.7	3.800000
+40057	3.8	3.771429
+6039	3.2	3.100000
+16183	2.9	3.200000
+14323	3.3	3.300000
+39671	4.3	4.300000
+12719	3.7	3.180000
+39043	4.3	4.300000
+31686	2.9	2.983333
+22787	3.5	3.512500
+24279	3.1	3.100000
+36040	3.7	3.700000
+4124 rows × 2 columns
+
+In [74]:
+from sklearn.ensemble import RandomForestRegressor
+Rforest=RandomForestRegressor(n_estimators=500,random_state=329,min_samples_leaf=.0001)
+Rforest.fit(x_train,y_train)
+y_predict=Rforest.predict(x_test)
+from sklearn.metrics import r2_score
+r2_score(y_test,y_predict)
+Out[74]:
+0.8773808619238765
+In [75]:
+Randpred =pd.DataFrame({ "actual": y_test, "pred": y_predict })
+Randpred
+Out[75]:
+actual	pred
+6821	4.0	3.971100
+21541	3.7	3.701841
+34583	4.0	3.985948
+5162	3.4	3.401011
+32463	4.5	4.457212
+16675	4.3	4.300528
+4981	4.0	3.869708
+36271	4.0	4.004606
+40906	3.5	3.299656
+30733	4.3	4.162239
+6763	4.1	4.111214
+4495	3.1	3.198191
+12633	3.5	3.280035
+11983	4.3	4.274432
+36938	3.2	3.565914
+9796	4.1	3.918985
+11244	3.0	3.200462
+16623	4.1	4.085423
+8737	3.7	3.729452
+3933	4.2	4.192058
+17855	4.2	4.181827
+14	3.8	3.806699
+17591	3.6	3.601075
+14062	4.3	4.300619
+29209	4.3	4.335048
+23188	3.8	3.795702
+40485	3.5	3.430575
+29306	3.2	3.220452
+40716	4.4	4.277096
+22626	3.5	3.500679
+...	...	...
+15350	4.1	4.057786
+9605	3.3	3.310646
+6249	3.3	3.306215
+17575	3.7	3.237174
+9125	4.7	4.698732
+38287	3.5	3.503200
+34564	4.0	4.002764
+10930	3.7	3.489186
+9783	3.2	3.203264
+6554	2.7	3.103023
+33734	4.0	3.997080
+27224	3.6	3.539986
+28712	4.0	3.997728
+35817	3.0	3.416566
+5516	3.4	3.511670
+26291	3.6	3.571962
+29533	3.9	3.687898
+33070	4.5	4.137593
+13101	3.7	3.832657
+40057	3.8	3.760104
+6039	3.2	3.250694
+16183	2.9	3.077526
+14323	3.3	3.258740
+39671	4.3	4.205243
+12719	3.7	3.209595
+39043	4.3	4.276522
+31686	2.9	3.245656
+22787	3.5	3.494592
+24279	3.1	3.107821
+36040	3.7	3.684497
+4124 rows × 2 columns
+
+In [ ]:
